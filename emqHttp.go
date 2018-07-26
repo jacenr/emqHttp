@@ -1,4 +1,4 @@
-package emqhttp
+package main
 
 import (
 	"log"
