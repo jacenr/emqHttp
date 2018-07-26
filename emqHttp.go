@@ -9,7 +9,7 @@ type account map[string]string
 
 func (ac *account) auth(w http.ResponseWriter, req *http.Request) {
 	err := req.ParseForm()
-	log.Println("req.Form")
+	log.Println(req.Form)
 	if err != nil {
 		log.Fatal("Can't parse post data.")
 	}
