@@ -18,7 +18,7 @@ func (ac *account) auth(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-	pwd, ok := ac[username]
+	pwd, ok := (*ac)[username]
 	if !ok {
 		w.WriteHeader(http.StatusNotFound)
 		return
@@ -31,7 +31,7 @@ func (ac *account) auth(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	ac := account{"tom": "tompasswd"}
+	ac := &account{"tom": "tompasswd"}
 	http.HandleFunc("/auth", ac.auth)
 	log.Fatal(http.ListenAndServe(":8082", nil))
 }
