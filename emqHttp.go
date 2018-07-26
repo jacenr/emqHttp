@@ -14,6 +14,8 @@ func (ac *account) auth(w http.ResponseWriter, req *http.Request) {
 	}
 	username := req.Form.Get("u")
 	passwd := req.Form.Get("P")
+	log.Println(username)
+	log.Println(passwd)
 	if username == "" || passwd == "" {
 		w.WriteHeader(http.StatusNotFound)
 		log.Println("username or passwd is blank.")
