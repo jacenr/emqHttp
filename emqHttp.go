@@ -14,11 +14,11 @@ func (ac *account) auth(w http.ResponseWriter, req *http.Request) {
 	}
 	username := req.Form.Get("u")
 	passwd := req.Form.Get("p")
-	if username == ""|passwd == "" {
+	if username == "" || passwd == "" {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-	pwd, ok := ac["username"]
+	pwd, ok := ac[username]
 	if !ok {
 		w.WriteHeader(http.StatusNotFound)
 		return
