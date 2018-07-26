@@ -77,8 +77,8 @@ func main() {
 	ac := &account{"tom": "tompasswd"}
 	al := &acl{
 		"tom": {
-			"sub": {"test"},
-			"pub": {"test"},
+			"1": {"test"},
+			"2": {"test"},
 		},
 	}
 	http.HandleFunc("/auth", ac.auth)
