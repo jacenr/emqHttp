@@ -13,7 +13,7 @@ func (ac *account) auth(w http.ResponseWriter, req *http.Request) {
 		log.Fatal("Can't parse post data.")
 	}
 	username := req.Form.Get("u")
-	passwd := req.Form.Get("p")
+	passwd := req.Form.Get("P")
 	if username == "" || passwd == "" {
 		w.WriteHeader(http.StatusNotFound)
 		return
