@@ -6,6 +6,7 @@ import (
 )
 
 type account map[string]string
+type acl map[string]map[string][]string
 
 func (ac *account) auth(w http.ResponseWriter, req *http.Request) {
 	err := req.ParseForm()
@@ -36,8 +37,51 @@ func (ac *account) auth(w http.ResponseWriter, req *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+func (al *acl) aclcheck(w http.ResponseWriter, req *http.Request) {
+	err := req.ParseForm()
+	log.Println(req.Form)
+	if err != nil {
+		log.Fatal("Can't parse post data.")
+	}
+	username := req.Form.Get("username")
+	topic := req.Form.Get("topic")
+	access := req.Form.Get("access")
+	if username == "" || topic == "" || access == "" {
+		w.WriteHeader(http.StatusNotFound)
+		log.Println("All param is blank.")
+		return
+	}
+	accessMap, ok := (*al)[username]
+	if !ok {
+		w.WriteHeader(http.StatusNotFound)
+		log.Println("Username deny.")
+		return
+	}
+	accessList, ok := accessMap[access]
+	if !ok {
+		w.WriteHeader(http.StatusNotFound)
+		log.Println("Access deny.")
+		return
+	}
+	for _, t := range accessList {
+		if t == topic {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+	}
+	w.WriteHeader(http.StatusNotFound)
+	log.Println("Topic deny.")
+}
+
 func main() {
 	ac := &account{"tom": "tompasswd"}
+	al := &acl{
+		"tom": {
+			"sub": {"test"},
+			"pub": {"test"},
+		},
+	}
 	http.HandleFunc("/auth", ac.auth)
+	http.HandleFunc("/acl", al.aclcheck)
 	log.Fatal(http.ListenAndServe(":8082", nil))
 }
